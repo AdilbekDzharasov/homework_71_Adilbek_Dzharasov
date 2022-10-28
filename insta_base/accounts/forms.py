@@ -20,6 +20,12 @@ class LoginForm(forms.Form):
 
 
 class CustomUserCreationForm(forms.ModelForm):
+    GENDER_CHOICES = (
+        ('O', "Другое"),
+        ('M', "Мужской"),
+        ('W', "Женский"),
+    )
+
     password = forms.CharField(
         label='Пароль',
         strip=False,
@@ -34,6 +40,7 @@ class CustomUserCreationForm(forms.ModelForm):
     )
     username = forms.CharField(label='Логин')
     first_name = forms.CharField(label='Имя')
+    gender = forms.ChoiceField(choices=GENDER_CHOICES)
 
     class Meta:
         model = get_user_model()
@@ -77,7 +84,7 @@ class UserChangeForm(forms.ModelForm):
             'user_info',
             'phone',
             'gender'
-                  )
+        )
         labels = {'email': 'Почта',
                   'username': 'Логин',
                   'avatar': 'Фото профиля',
@@ -85,5 +92,5 @@ class UserChangeForm(forms.ModelForm):
                   'user_info': 'Информация о пользователе',
                   'phone': 'Номер телефона',
                   'gender': 'Пол'
-                  }
+        }
 

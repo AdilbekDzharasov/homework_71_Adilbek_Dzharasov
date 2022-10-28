@@ -20,8 +20,8 @@
             <a href="{% url 'index' %}"><img src="{% static 'images/logo.PNG' %}" class="brand-img" alt=""></a>
             <input type="text" class="search-box" placeholder="search">
             <div class="nav-items">
-                <a href="#" class="btn btn-sm "><i class="bi bi-plus-square"></i></a>
-                <a href="#" class="btn btn-sm "><i class="bi bi-person-fill"></i></a>
+                <a href="{% url 'posts_add' %}" class="btn btn-sm "><i class="bi bi-plus-square"></i></a>
+                <a href="{% url 'profile' user.pk %}" class="btn btn-sm "><i class="bi bi-person-fill"></i></a>
             </div>
         </div>
   </div>
