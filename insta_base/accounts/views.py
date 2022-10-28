@@ -4,7 +4,6 @@ from django.core.paginator import Paginator
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
-
 from accounts.forms import LoginForm, CustomUserCreationForm, UserChangeForm
 
 
@@ -23,10 +22,10 @@ class LoginView(TemplateView):
         form = self.form(request.POST)
         if not form.is_valid():
             return redirect('login')
-        email = form.cleaned_data.get('email')
+        username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
         next = form.cleaned_data.get('next')
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if not user:
             return redirect('login')
         login(request, user)
@@ -46,7 +45,7 @@ class RegisterView(CreateView):
     success_url = '/'
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -63,15 +62,15 @@ class ProfileView(LoginRequiredMixin, DetailView):
     paginate_related_by = 5
     paginate_related_orphans = 0
 
-    def get_context_data(self, **kwargs):
-        articles = self.object.articles.order_by('-created_at')
-        paginator = Paginator(articles, self.paginate_related_by, orphans=self.paginate_related_orphans)
-        page_number = self.request.GET.get('page', 1)
-        page = paginator.get_page(page_number)
-        kwargs['page_obj'] = page
-        kwargs['articles'] = page.object_list
-        kwargs['is_paginated'] = page.has_other_pages()
-        return super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     articles = self.object.articles.order_by('-created_at')
+    #     paginator = Paginator(articles, self.paginate_related_by, orphans=self.paginate_related_orphans)
+    #     page_number = self.request.GET.get('page', 1)
+    #     page = paginator.get_page(page_number)
+    #     kwargs['page_obj'] = page
+    #     kwargs['articles'] = page.object_list
+    #     kwargs['is_paginated'] = page.has_other_pages()
+    #     return super().get_context_data(**kwargs)
 
 
 class UserChangeView(UpdateView):
@@ -82,3 +81,4 @@ class UserChangeView(UpdateView):
 
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.object.pk})
+

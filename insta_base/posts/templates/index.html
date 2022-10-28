@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% for a in accounts %}
+    <section class="main">
+            <div class="wrapper">
+                <div class="left-col">
+                    <div class="post">
+                        <div class="info">
+                            <div class="user">
+                                <p class="username">modern_web_channel</p>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <div class="reaction-wrapper">
+                            </div>
+                            <p class="likes">1,012 likes</p>
+                            <p class="description"><span>{{ a.username }}</span>{{ a.email }}</p>
+                            <p class="post-time">2 minutes ago</p>
+                            <a href="{% url 'change' a.pk %}" class="btn btn my-2">Change profile</a>
+                        </div>
+                        <div class="comment-wrapper">
+                            <button class="comment-btn">post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endfor %}
+
+
+{% endblock %}

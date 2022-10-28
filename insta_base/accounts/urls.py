@@ -9,3 +9,4 @@ urlpatterns = [
     path('profile/<int:pk>/change/', UserChangeView.as_view(), name='change'),
     path('logout/', logout_view, name='logout')
 ]
+

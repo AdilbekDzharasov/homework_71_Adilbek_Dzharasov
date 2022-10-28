@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load django_bootstrap5 %}
-
 {% block content %}
-    <form action="{% url 'register' %}" method="POST">
-        <div class="form">
+    <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+        <div class="form mt-4">
             {% csrf_token %}
 
             {% bootstrap_form form %}
