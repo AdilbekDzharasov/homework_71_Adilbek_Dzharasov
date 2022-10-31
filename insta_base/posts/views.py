@@ -1,5 +1,6 @@
 from urllib.parse import urlencode
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, FormView
@@ -38,6 +39,14 @@ class PostsDetailView(DetailView):
     context_object_name = 'post'
     template_name = 'post.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(PostsDetailView, self).get_context_data(*args, **kwargs)
+        likes_count = get_object_or_404(Post, id=self.kwargs['pk'])
+        get_likes = likes_count.get_likes()
+        context['get_likes'] = get_likes
+        context['comments'] = self.object.comments.order_by('-created_at')
+        return context
+
 
 class CommentAddView(LoginRequiredMixin, FormView):
     form_class = CommentForm
@@ -50,4 +59,10 @@ class CommentAddView(LoginRequiredMixin, FormView):
             author = request.user
             Comment.objects.create(author=author, post=post, text=text)
         return redirect('index')
+
+
+def LikeView(request, pk):
+    post = get_object_or_404(Post, pk=request.POST.get('post_id'))
+    post.likes.add(request.user)
+    return HttpResponseRedirect(reverse('index'))
 

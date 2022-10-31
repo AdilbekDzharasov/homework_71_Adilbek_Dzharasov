@@ -10,7 +10,7 @@
                 <div class="post">
                     <div class="info">
                         <div class="user">
-                            <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.image.url }}" alt=""></a></div>
+                            <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.author.avatar.url }}" alt=""></a></div>
                             <p class="username">{{ post.author.username }}</p>
                         </div>
                         <img src="{% static 'images/option.PNG' %}" class="options" alt="">
@@ -18,12 +18,15 @@
                     <img src="{{ post.image.url }}" class="post-image" alt="">
                     <div class="post-content">
                         <div class="reaction-wrapper">
-                            <img src="{% static 'images/like.PNG' %}" class="icon" alt="">
+                            <form action="{% url 'like_post' post.pk %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="post_id" value="{{ post.pk }}"><img src="{% static 'images/like.PNG' %}" class="icon" alt=""></button>
+                            </form>
                             <img src="{% static 'images/comment.PNG' %}" class="icon" alt="">
                             <img src="{% static 'images/send.PNG' %}" class="icon" alt="">
                             <img src="{% static 'images/save.PNG' %}" class="save icon" alt="">
                         </div>
-                        <p class="likes">{{ posts.liked_users.all.count }} отметок "Нравится"</p>
+                        <p class="likes">{{ post.get_likes }} отметок "Нравится"</p>
                         <p class="description"><span>{{ post.author.username }}</span>{{ post.description }}</p>
                     </div>
                     <div class="comment-wrapper">
