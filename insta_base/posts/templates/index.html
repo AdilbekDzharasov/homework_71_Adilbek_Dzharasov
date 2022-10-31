@@ -1,34 +1,43 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load django_bootstrap5 %}
 {% block content %}
 
-{% for a in accounts %}
     <section class="main">
-            <div class="wrapper">
-                <div class="left-col">
-                    <div class="post">
-                        <div class="info">
-                            <div class="user">
-                                <p class="username">modern_web_channel</p>
-                            </div>
+        <div class="wrapper">
+            <div class="left-col">
+                {% for post in posts %}
+                <div class="post">
+                    <div class="info">
+                        <div class="user">
+                            <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.image.url }}" alt=""></a></div>
+                            <p class="username">{{ post.author.username }}</p>
                         </div>
-                        <div class="post-content">
-                            <div class="reaction-wrapper">
-                            </div>
-                            <p class="likes">1,012 likes</p>
-                            <p class="description"><span>{{ a.username }}</span>{{ a.email }}</p>
-                            <p class="post-time">2 minutes ago</p>
-                            <a href="{% url 'change' a.pk %}" class="btn btn my-2">Change profile</a>
+                        <img src="{% static 'images/option.PNG' %}" class="options" alt="">
+                    </div>
+                    <img src="{{ post.image.url }}" class="post-image" alt="">
+                    <div class="post-content">
+                        <div class="reaction-wrapper">
+                            <img src="{% static 'images/like.PNG' %}" class="icon" alt="">
+                            <img src="{% static 'images/comment.PNG' %}" class="icon" alt="">
+                            <img src="{% static 'images/send.PNG' %}" class="icon" alt="">
+                            <img src="{% static 'images/save.PNG' %}" class="save icon" alt="">
                         </div>
-                        <div class="comment-wrapper">
-                            <button class="comment-btn">post</button>
-                        </div>
+                        <p class="likes">{{ posts.liked_users.all.count }} отметок "Нравится"</p>
+                        <p class="description"><span>{{ post.author.username }}</span>{{ post.description }}</p>
+                    </div>
+                    <div class="comment-wrapper">
+                        <form action="{% url 'to_comment' post.pk %}" method="post">
+                            {% csrf_token %}
+                            {% bootstrap_form favorite_form %}
+                            {% bootstrap_button button_type="submit" content='Отправить' %}
+                        </form>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-        </section>
-{% endfor %}
-
+        </div>
+    </section>
 
 {% endblock %}
+

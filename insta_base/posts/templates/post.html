@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load django_bootstrap5 %}
 {% block title %}
 Post view
 {% endblock %}
@@ -27,7 +28,12 @@ Post view
                                 <img src="{% static 'images/send.PNG' %}" class="icon" alt="">
                                 <img src="{% static 'images/save.PNG' %}" class="save icon" alt="">
                             </div>
-                            <p class="likes">1,012 likes</p>
+                            <form action="{% url 'like_add' post.pk %}" method="post">
+                                {% csrf_token %}
+                                {% bootstrap_form favorite_form %}
+                                {% bootstrap_button button_type="submit" content='Like' %}
+                            </form>
+                            <p class="likes">{{ post.user_likes.count }} likes</p>
                             <p class="description"><span>{{ post.author.username }}</span>{{ post.description }}</p>
                             <p class="post-time">2 minutes ago</p>
                         </div>
@@ -43,3 +49,16 @@ Post view
 
 {% endblock %}
 
+<h1>{{ user_obj.get_full_name|default:user_obj.username }}</h1>
+
+    {% if user_obj.avatar %}
+        <img class="avatar" src="{{ user_obj.avatar.url }}" width="250" height="250" alt="user picture">
+    {% endif %}
+    <p>Логин: {{ user_obj.username }}</p>
+    <p>Имя: {{ user_obj.first_name }}</p>
+    <p>Почта: {{ user_obj.email }}</p>
+    <p>Информация: {{ user_obj.user_info }}</p>
+    <p>Телефон: {{ user_obj.phone }}</p>
+    <p>Пол: {{ user_obj.gender }}</p>
+    <p>Подписки: {{ user_obj.subscriptions.count }}</p>
+    <p>Подписчики: {{ user_obj.subscribers.count }}</p>

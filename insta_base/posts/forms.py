@@ -8,3 +8,6 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('description', 'image')
 
+class CommentForm(forms.Form):
+    text = forms.CharField(max_length=50, required=True, label='Комментарий')
+

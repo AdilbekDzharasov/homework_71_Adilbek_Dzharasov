@@ -1,12 +1,11 @@
 from django.urls import path
-from posts.views import HomePostView
-from posts.views import PostAddView
-from posts.views import PostsDetailView
+from posts.views import HomePostView, PostAddView, PostsDetailView, CommentAddView
 
 
 urlpatterns = [
-    path('posts', HomePostView.as_view(), name='index'),
+    path('', HomePostView.as_view(), name='index'),
     path('add', PostAddView.as_view(), name='posts_add'),
-    path('detail/<int:pk>', PostsDetailView.as_view(), name='posts_detail')
+    path('detail/<int:pk>', PostsDetailView.as_view(), name='posts_detail'),
+    path('add/comment/<int:pk>', CommentAddView.as_view() ,name='to_comment')
     ]
 
