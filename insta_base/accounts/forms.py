@@ -40,7 +40,7 @@ class CustomUserCreationForm(forms.ModelForm):
     )
     username = forms.CharField(label='Логин')
     first_name = forms.CharField(label='Имя')
-    gender = forms.ChoiceField(choices=GENDER_CHOICES)
+    gender = forms.ChoiceField(choices=GENDER_CHOICES, label='Пол')
 
     class Meta:
         model = get_user_model()
@@ -69,7 +69,6 @@ class CustomUserCreationForm(forms.ModelForm):
 
         if commit:
             user.save()
-            # user.groups.add('user')
         return user
 
 

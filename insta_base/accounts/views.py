@@ -42,7 +42,7 @@ class LoginView(TemplateView):
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return redirect('login')
 
 
 class RegisterView(CreateView):
@@ -125,5 +125,5 @@ class SearchAccountView(ListView):
 def SubscriptionsView(request, pk):
     user = get_object_or_404(Account, pk=request.POST.get('user_id'))
     user.subscriptions.add(request.user)
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('profile', args=[str(pk)]))
 

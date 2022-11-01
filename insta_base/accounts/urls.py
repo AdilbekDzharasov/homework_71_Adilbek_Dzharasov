@@ -9,6 +9,7 @@ urlpatterns = [
     path('profile/<int:pk>/change/', UserChangeView.as_view(), name='change'),
     path('logout/', logout_view, name='logout'),
     path('profile/search', SearchAccountView.as_view(), name='search'),
-    path('profile/subscriptions/<int:pk>', SubscriptionsView, name='subscriptions')
+    path('profile/subscriptions/<int:pk>', SubscriptionsView, name='subscriptions'),
+    path('profile/<int:pk>/change', UserChangeView.as_view(), name='change'),
 ]
 

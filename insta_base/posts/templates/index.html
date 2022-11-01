@@ -8,6 +8,7 @@
     border: none;
    }
 </style>
+{% if user.is_authenticated %}
     <section class="main">
         <div class="wrapper">
             <div class="left-col">
@@ -15,8 +16,13 @@
                 <div class="post">
                     <div class="info">
                         <div class="user">
-                            <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.author.avatar.url }}" alt=""></a></div>
-                            <p class="username">{{ post.author.username }}</p>
+                            {% if post.author.avatar %}
+                                <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.author.avatar.url }}" alt=""></a></div>
+                                <p class="username">{{ post.author.username }}</p>
+                            {% else %}
+                               <img class="border border-2 rounded-circle" src="{% static 'images/no.jpg' %}" alt="image" height="200" width="250">
+                                <p class="username">{{ post.author.username }}</p>
+                            {% endif %}
                         </div>
                         <img src="{% static 'images/option.PNG' %}" class="options" alt="">
                     </div>
@@ -45,6 +51,7 @@
             </div>
         </div>
     </section>
-
+{% endif %}
 {% endblock %}
+
 

@@ -1,4 +1,3 @@
-from urllib.parse import urlencode
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
@@ -21,7 +20,7 @@ class HomePostView(ListView):
         return context
 
 
-class PostAddView(CreateView):
+class PostAddView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'add.html'
     form_class = PostForm
@@ -34,7 +33,7 @@ class PostAddView(CreateView):
         return super().form_valid(form)
 
 
-class PostsDetailView(DetailView):
+class PostsDetailView(LoginRequiredMixin, DetailView):
     model = Post
     context_object_name = 'post'
     template_name = 'post.html'

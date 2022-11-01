@@ -1,52 +1,122 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Пользователь{% endblock %}
 
 {% block content %}
+<style>
+    .profile {
+    padding: 5rem 0;
+}
 
-<div class="d-flex align-items-center mt-4">
-    <div class="flex-shrink-0">
-          {% if user_obj.avatar %}
-               <img class="avatar border border-2 rounded-circle" src="{{ user_obj.avatar.url }}" width="200" height="200" alt="user picture">
-          {% endif %}
+.profile::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.profile-image {
+    float: left;
+    width: calc(33.333% - 1rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 3rem;
+}
+
+.profile-image img {
+    border-radius: 50%;
+}
+
+.profile-user-settings,
+.profile-stats,
+.profile-bio {
+    float: left;
+    width: calc(66.666% - 2rem);
+}
+
+.profile-user-settings {
+    margin-top: 1.1rem;
+}
+
+.profile-user-name {
+    display: inline-block;
+    font-size: 3.2rem;
+    font-weight: 300;
+}
+
+.profile-edit-btn {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    border: 0.1rem solid #dbdbdb;
+    border-radius: 0.3rem;
+    padding: 0 2.4rem;
+    margin-left: 2rem;
+}
+
+.profile-settings-btn {
+    font-size: 2rem;
+}
+
+.profile-stats {
+    margin-top: 2.3rem;
+}
+
+.profile-stats li {
+    display: inline-block;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-right: 4rem;
+    cursor: pointer;
+}
+
+.profile-stats li:last-of-type {
+    margin-right: 0;
+}
+
+.profile-bio {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 2.3rem;
+}
+
+.profile-real-name,
+.profile-stat-count,
+.profile-edit-btn {
+    font-weight: 600;
+}
+button {
+    background: white;
+    border: none;
+}
+</style>
+
+<div class="profile">
+    <div class="profile-image">
+        {% if user_obj.avatar %}
+            <img class="border border-2 rounded-circle" src="{{ user_obj.avatar.url }}" alt="image" height="200" width="250">
+        {% else %}
+            <img class="border border-2 rounded-circle" src="{% static 'images/no.jpg' %}" alt="image" height="200" width="250">
+        {% endif %}
     </div>
-    <div class="d-flex">
-            <div class="mb-4">
-                <ul class="">
-                    <al class="">
-                        <div class="">
-                            <span class="">{{ user_obj.posts.all.count }}</span> публикаций</div>
-                        </div>
-                    </al>
-                    <al class="">
-                        <a class="text-dark" href="#">
-                            <div class="px-3">
-                                <span class="">{{ user_obj.subscribers.count }}</span>
-                                подписчиков
-                            </div>
-                        </a>
-                    </al>
-                    <al class="">
-                        <a class="text-dark" href="#">
-                            <div class="">
-                                <span class="">{{ user_obj.subscriptions.count }}</span>
-                                подписок
-                            </div>
-                        </a>
-                    </al>
-                    <al class="">
-                        <a class="text-dark" href="#">
-                            <div class="">
-                                <form action="{% url 'subscriptions' user_obj.pk %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" name="user_id" value="{{ user_obj.pk }}">Подписаться</button>
-                                </form>
-                            </div>
-                        </a>
-                    </al>
-                </ul>
-            </div>
+    <div class="profile-user-settings">
+        <h1 class="profile-user-name">{{ user_obj.username }}</h1>
+        <div class="btn profile-edit-btn">
+            <form  action="{% url 'subscriptions' user_obj.pk %}" method="post">
+                {% csrf_token %}
+                <button class="btn" name="user_id" value="{{ user_obj.pk }}">Подписаться</button>
+            </form>
         </div>
+    </div>
+	<div class="profile-stats">
+		<ul>
+			<li><span class="profile-stat-count">{{ user_obj.posts.all.count }}</span> публикаций</li>
+			<li><span class="profile-stat-count">{{ user_obj.subscribers.count }}</span> подписок</li>
+			<li><span class="profile-stat-count">{{ user_obj.subscriptions.count }}</span> подписчиков</li>
+        </ul>
+    </div>
+    <div class="profile-bio">
+        <p><span class="profile-real-name">{{ user_obj.first_name }}</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️</p>
     </div>
 </div>
 
@@ -64,6 +134,15 @@
                         </div>
                         <a href="{% url 'posts_detail' post.pk %}"><img class="post-image" alt="" src="{{ post.image.url }}"></a>
                         <div class="post-content">
+                            <div class="reaction-wrapper">
+                                <form action="{% url 'like_post' post.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="post_id" value="{{ post.pk }}"><img src="{% static 'images/like.PNG' %}" class="icon" alt=""></button>
+                                </form>
+                                <img src="{% static 'images/comment.PNG' %}" class="icon" alt="">
+                                <img src="{% static 'images/send.PNG' %}" class="icon" alt="">
+                                <img src="{% static 'images/save.PNG' %}" class="save icon" alt="">
+                            </div>
                             <p class="likes">{{ post.get_likes }} отметок "Нравится"</p>
                             <p class="description"><span>{{ post.author.username }}</span>{{ post.description }}</p>
                             <p class="description">{{ post.comments.all.count }} Комментрий</p>
