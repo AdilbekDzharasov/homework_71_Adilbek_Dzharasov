@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -87,6 +87,14 @@ class UserChangeView(UpdateView):
 
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.object.pk})
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class SearchAccountView(ListView):
