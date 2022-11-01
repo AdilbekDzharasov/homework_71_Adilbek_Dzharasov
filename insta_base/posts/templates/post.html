@@ -4,36 +4,50 @@
 {% block title %}
 Post view
 {% endblock %}
-
+<style>
+   button {
+    background: white;
+    border: none;
+   }
+</style>
 {% block content %}
-
+<style>
+   button {
+    background: white;
+    border: none;
+   }
+</style>
     <section class="main">
             <div class="wrapper">
                 <div class="left-col">
                     <div class="post">
                         <div class="info">
                             <div class="user">
-                                <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{ post.author.avatar.url }}" alt=""></a></div>
+                                <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.author.avatar.url }}" alt=""></a></div>
                                 <p class="username">{{ post.author.username }}</p>
                             </div>
                             <img src="{% static 'images/option.png' %}" class="options" alt="">
                         </div>
                             {% if post.image %}
-                                <img class="post-image" alt="" src="{{ post.image.url }}">
+                                <a href="#"><img class="post-image" alt="" src="{{ post.image.url }}"></a>
                             {% endif %}
                         <div class="post-content">
                             <div class="reaction-wrapper">
-                                <img src="{% static 'images/like.PNG' %}" class="icon" alt="">
+                                <form action="{% url 'like_post' post.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="post_id" value="{{ post.pk }}"><img src="{% static 'images/like.PNG' %}" class="icon" alt=""></button>
+                                </form>
                                 <img src="{% static 'images/comment.PNG' %}" class="icon" alt="">
                                 <img src="{% static 'images/send.PNG' %}" class="icon" alt="">
                                 <img src="{% static 'images/save.PNG' %}" class="save icon" alt="">
                             </div>
                             <p class="likes">{{ get_likes }} отметок "Нравится"</p>
                             <p class="description"><span>{{ post.author.username }}</span>{{ post.description }}</p>
+                            <p class="description">{{ post.comments.all.count }} Комментарий</p>
+                            {% for comment in comments %}
+                                <p class="description"><span>{{ comment.author }}</span>{{ comment }}</p>
+                            {% endfor %}
                         </div>
-                    {% for c in comments %}
-                        <p>{{ c.author }} {{ c }}</p>
-                    {% endfor %}
                     </div>
                 </div>
             </div>
@@ -41,16 +55,3 @@ Post view
 
 {% endblock %}
 
-<h1>{{ user_obj.get_full_name|default:user_obj.username }}</h1>
-
-    {% if user_obj.avatar %}
-        <img class="avatar" src="{{ user_obj.avatar.url }}" width="250" height="250" alt="user picture">
-    {% endif %}
-    <p>Логин: {{ user_obj.username }}</p>
-    <p>Имя: {{ user_obj.first_name }}</p>
-    <p>Почта: {{ user_obj.email }}</p>
-    <p>Информация: {{ user_obj.user_info }}</p>
-    <p>Телефон: {{ user_obj.phone }}</p>
-    <p>Пол: {{ user_obj.gender }}</p>
-    <p>Подписки: {{ user_obj.subscriptions.count }}</p>
-    <p>Подписчики: {{ user_obj.subscribers.count }}</p>

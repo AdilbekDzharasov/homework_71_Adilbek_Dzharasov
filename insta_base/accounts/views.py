@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, ListView
 from accounts.forms import LoginForm, CustomUserCreationForm, UserChangeForm
@@ -8,6 +10,7 @@ from django.db.models import Q
 from django.utils.http import urlencode
 from accounts.forms import SearchForm
 from accounts.models import Account
+from django.core.paginator import Paginator
 
 
 class LoginView(TemplateView):
@@ -62,16 +65,18 @@ class ProfileView(LoginRequiredMixin, DetailView):
     model = get_user_model()
     template_name = 'account.html'
     context_object_name = 'user_obj'
+    paginate_related_by = 3
+    paginate_related_orphans = 0
 
-    # def get_context_data(self, **kwargs):
-    #     articles = self.object.articles.order_by('-created_at')
-    #     paginator = Paginator(articles, self.paginate_related_by, orphans=self.paginate_related_orphans)
-    #     page_number = self.request.GET.get('page', 1)
-    #     page = paginator.get_page(page_number)
-    #     kwargs['page_obj'] = page
-    #     kwargs['articles'] = page.object_list
-    #     kwargs['is_paginated'] = page.has_other_pages()
-    #     return super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        posts = self.get_object().posts.all()
+        paginator = Paginator(posts, self.paginate_related_by, orphans=self.paginate_related_orphans)
+        page_number = self.request.GET.get('page', 1)
+        page = paginator.get_page(page_number)
+        kwargs['page_obj'] = page
+        kwargs['posts'] = page.object_list
+        kwargs['is_paginated'] = page.has_other_pages()
+        return super().get_context_data(**kwargs)
 
 
 class UserChangeView(UpdateView):
@@ -86,7 +91,7 @@ class UserChangeView(UpdateView):
 
 class SearchAccountView(ListView):
     model = Account
-    template_name = 'base.html'
+    template_name = 'profile_search.html'
     context_object_name = 'accounts'
 
     def get(self, request, *args, **kwargs):
@@ -116,4 +121,9 @@ class SearchAccountView(ListView):
             return self.form.cleaned_data['search']
         return None
 
+
+def SubscriptionsView(request, pk):
+    user = get_object_or_404(Account, pk=request.POST.get('user_id'))
+    user.subscriptions.add(request.user)
+    return HttpResponseRedirect(reverse('index'))
 

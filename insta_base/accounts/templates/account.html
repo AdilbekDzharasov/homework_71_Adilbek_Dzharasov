@@ -34,11 +34,46 @@
                             </div>
                         </a>
                     </al>
+                    <al class="">
+                        <a class="text-dark" href="#">
+                            <div class="">
+                                <form action="{% url 'subscriptions' user_obj.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="user_id" value="{{ user_obj.pk }}">Подписаться</button>
+                                </form>
+                            </div>
+                        </a>
+                    </al>
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
+<div class="container">
+    <section class="main">
+            <div class="wrapper">
+                <div class="left-col">
+            {% for post in posts %}
+                    <div class="post">
+                        <div class="info">
+                            <div class="user">
+                                <div class="profile-pic"><a href="{% url 'profile' post.author.pk %}"><img src="{{ post.author.avatar.url }}" alt=""></a></div>
+                                <p class="username">{{ post.author.username }}</p>
+                            </div>
+                        </div>
+                        <a href="{% url 'posts_detail' post.pk %}"><img class="post-image" alt="" src="{{ post.image.url }}"></a>
+                        <div class="post-content">
+                            <p class="likes">{{ post.get_likes }} отметок "Нравится"</p>
+                            <p class="description"><span>{{ post.author.username }}</span>{{ post.description }}</p>
+                            <p class="description">{{ post.comments.all.count }} Комментрий</p>
+                        </div>
+                    </div>
+             {% endfor %}
+                </div>
+            </div>
+    </section>
+</div>
 
 {% endblock %}
+

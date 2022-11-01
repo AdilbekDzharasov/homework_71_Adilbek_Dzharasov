@@ -15,34 +15,28 @@
 
 <body>
 
-    <div class="container">
-        <header class="blog-header py-3 bg-white border-bottom box-shadow">
-            <div class="row flex-nowrap justify-content-between align-items-center">
-                <div class="col-1 pt-1">
-                    <a class="text-dark" href="#"><i class="bi bi-instagram" style="font-size: 2rem"></i></a>
-                </div>
-                <div class="col-1 pt-1">
-                    <img class="d-block mx-auto" src="{% static 'images/logo.PNG' %}" alt="" width="170" height="72">
-                </div>
-                <div class="col-9 text-center">
-                    <form action="{% url 'search' %}" method="get">
-                        <input type="search" type="text" name="q" placeholder="Search acc">
-                        <button type="submit"><i class="bi bi-search"></i></button>
-                    </form>
-                </div>
-                <div class="col-1">
 
-                    <a href="{% url 'login' %}" class="btn btn my-2">Entrance</a>
-                            <a href="{% url 'register' %}" class="btn btn my-2" >Register</a>
-                              <form action="{% url 'logout' %}" method="post">
-              {% csrf_token %}
-              <span class="">Hello: {{ user.username }}</span>
-              <input type="submit" value="Exit">
-          </form>
-               </div>
+        <header>
+            <div class="navbar navbar-dark bg-white shadow-sm">
+              <div class="container">
+                <a href="/" class="navbar-brand d-flex align-items-center">
+                  <strong><a class="text-dark" href="/"><i class="bi bi-instagram" style="font-size: 2rem"></i></a></strong>
+                </a>
+                <a href="/"><img class="d-block mx-auto" src="{% static 'images/logo.PNG' %}" alt="" width="170" height="72"></a>
+                {% if user.is_authenticated %}
+                  <a href="{% url 'posts_add' %}" class="text-dark"><i class="bi bi-plus-square" style="font-size: 2rem"></i></a>
+                  <a href="{% url 'search' %}" class="text-dark"><i class="bi bi-search" style="font-size: 2rem"></i></a>
+                  <a href="{% url 'profile' user.pk %}" class="btn btn my-2"><i class="bi bi-person-fill" style="font-size: 2rem"></i></a
+                  <form action="#" method="post">
+                      {% csrf_token %}
+                      <input type="submit" value="Exit">
+                  </form>
+                    {% else %}
+                        <a href="#" class="btn btn my-2 ">Entrance</a>
+                    {% endif %}
+              </div>
             </div>
         </header>
-    </div>
 
     <div class="container">
         {% block content %}{% endblock %}

@@ -16,7 +16,7 @@ body{
     font-family: 'roboto', sans-serif;
 }
 .wrapper{
-    width: 70%;
+    width: 120%;
     max-width: 1000px;
     display: grid;
     grid-template-columns: 60% 40%;
