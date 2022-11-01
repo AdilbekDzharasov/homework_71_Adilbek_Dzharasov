@@ -42,6 +42,8 @@
                       <input type="submit" value="Выход">
                     </form>
                 </li>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn btn my-2 text-dark">Вход</a>
             {% endif %}
           </ul>
         </div>
