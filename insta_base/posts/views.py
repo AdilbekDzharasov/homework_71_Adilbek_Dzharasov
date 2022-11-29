@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, FormView
 from posts.models import Post
 from posts.forms import PostForm
@@ -60,8 +61,12 @@ class CommentAddView(LoginRequiredMixin, FormView):
         return redirect('index')
 
 
-def LikeView(request, pk):
-    post = get_object_or_404(Post, pk=request.POST.get('post_id'))
-    post.likes.add(request.user)
-    return HttpResponseRedirect(reverse('index'))
+class LikeDislikeView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, id=request.POST.get('post_id'))
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+        return redirect('index')
 
